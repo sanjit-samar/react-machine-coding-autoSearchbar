@@ -2,3 +2,17 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+.input-box {
+  width: 500px;
+}
+
+.search-container {
+  max-width: 500px;
+  max-height: 400px;
+  margin: auto;
+}
+
+.search-box {
+  text-align: left;
+}
