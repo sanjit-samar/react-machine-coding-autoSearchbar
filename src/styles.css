@@ -10,9 +10,17 @@
 .search-container {
   max-width: 500px;
   max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid black;
   margin: auto;
 }
 
 .search-box {
   text-align: left;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.search-box:hover {
+  background-color: aqua;
 }

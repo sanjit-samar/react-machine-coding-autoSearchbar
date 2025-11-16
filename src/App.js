@@ -1,8 +1,21 @@
 import { useState } from "react";
 import "./styles.css";
 import { useEffect } from "react";
+import { useCallback, useMemo } from "react";
+
+function debounce(func, delay) {
+  let timmer;
+
+  return function (...args) {
+    clearTimeout(timmer);
+    timmer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
 
 export default function App() {
+  const [showInput, setshowInput] = useState(false);
   const [input, setInput] = useState("");
   const [data, setData] = useState([]);
 
@@ -12,9 +25,13 @@ export default function App() {
     setData(result.recipes);
   };
 
+  const debouncSearch = useCallback(debounce(fetchData, 400), []);
+
   useEffect(() => {
-    fetchData();
-  }, [input]);
+    if (input) {
+      debouncSearch(input);
+    }
+  }, [input, debouncSearch]);
 
   return (
     <div className="App">
@@ -22,13 +39,18 @@ export default function App() {
         className="input-box"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onFocus={() => setshowInput(true)}
+        onBlur={() => setshowInput(false)}
       />
-      {data &&
-        data?.map((el) => (
-          <div key={el.id} className="search-container">
-            <div className="search-box">{el.name}</div>
-          </div>
-        ))}
+      <div className="search-container">
+        {data &&
+          showInput &&
+          data?.map((el) => (
+            <div className="search-box" key={el.id}>
+              {el.name}
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
