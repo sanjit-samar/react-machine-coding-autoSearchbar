@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./styles.css";
 import { useEffect } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 function debounce(func, delay) {
   let timmer;
@@ -25,13 +25,22 @@ export default function App() {
     setData(result.recipes);
   };
 
-  const debouncSearch = useCallback(debounce(fetchData, 400), []);
+  const debouncSearch = useCallback(debounce(fetchData, 400), [input]);
 
   useEffect(() => {
     if (input) {
       debouncSearch(input);
     }
   }, [input, debouncSearch]);
+
+  //Either use if not using debounce function
+  // useEffect(() => {
+  //   let timmer = setTimeout(fetchData, 400);
+
+  //   return () => {
+  //     clearTimeout(timmer);
+  //   };
+  // }, [input]);
 
   return (
     <div className="App">
