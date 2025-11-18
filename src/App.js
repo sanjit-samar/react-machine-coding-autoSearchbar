@@ -19,8 +19,15 @@ export default function App() {
   const [input, setInput] = useState("");
   const [data, setData] = useState([]);
 
-  const fetchData = async () => {
-    const data = await fetch(`https://dummyjson.com/recipes/search?q=${input}`);
+  const fetchData = async (serchText) => {
+    if (!serchText) {
+      setData([]);
+      return;
+    }
+
+    const data = await fetch(
+      `https://dummyjson.com/recipes/search?q=${serchText}`
+    );
     const result = await data.json();
     setData(result.recipes);
   };
