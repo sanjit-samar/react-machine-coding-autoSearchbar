@@ -19,18 +19,27 @@ export default function App() {
   const [input, setInput] = useState("");
   const [data, setData] = useState([]);
 
-  const fetchData = async () => {
-    const data = await fetch(`https://dummyjson.com/recipes/search?q=${input}`);
+  // const fetchData = async () => {
+  //   const data = await fetch(`https://dummyjson.com/recipes/search?q=${input}`);
+  //   const result = await data.json();
+  //   setData(result.recipes);
+  // };
+  const fetchData = async (searchText) => {
+    if (!searchText) {
+      setData([]); // clear results when input empty
+      return;
+    }
+    const data = await fetch(
+      `https://dummyjson.com/recipes/search?q=${searchText}`
+    );
     const result = await data.json();
     setData(result.recipes);
   };
 
-  const debouncSearch = useCallback(debounce(fetchData, 400), [input]);
+  const debouncSearch = useCallback(debounce(fetchData, 400), []);
 
   useEffect(() => {
-    if (input) {
-      debouncSearch(input);
-    }
+    debouncSearch(input);
   }, [input, debouncSearch]);
 
   //Either use if not using debounce function
