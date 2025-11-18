@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "./styles.css";
-import { useEffect } from "react";
-import { useCallback } from "react";
 
 function debounce(func, delay) {
   let timmer;
@@ -19,20 +17,28 @@ export default function App() {
   const [input, setInput] = useState("");
   const [data, setData] = useState([]);
 
+  //for Data cache
+  const cache = useRef({});
+
   const fetchData = async (serchText) => {
-    if (!serchText) {
+    const key = serchText;
+    if (cache.current[key]) {
+      setData(cache.current[key]);
+      return;
+    }
+
+    if (!key) {
       setData([]);
       return;
     }
 
-    const data = await fetch(
-      `https://dummyjson.com/recipes/search?q=${serchText}`
-    );
+    const data = await fetch(`https://dummyjson.com/recipes/search?q=${key}`);
     const result = await data.json();
+    cache.current[serchText] = result.recipes;
     setData(result.recipes);
   };
 
-  const debouncSearch = useCallback(debounce(fetchData, 400), [input]);
+  const debouncSearch = useCallback(debounce(fetchData, 400), []);
 
   useEffect(() => {
     if (input) {
